@@ -8,4 +8,5 @@ import "github.com/lucassantoss1701/graphql-golang/internal/database"
 
 type Resolver struct {
 	CategoryDB *database.Category
+	CourseDB   *database.Course
 }

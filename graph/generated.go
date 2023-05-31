@@ -37,6 +37,8 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Category() CategoryResolver
+	Course() CourseResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -45,7 +47,7 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	Cateogry struct {
+	Category struct {
 		Courses     func(childComplexity int) int
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
@@ -70,12 +72,18 @@ type ComplexityRoot struct {
 	}
 }
 
+type CategoryResolver interface {
+	Courses(ctx context.Context, obj *model.Category) ([]*model.Course, error)
+}
+type CourseResolver interface {
+	Category(ctx context.Context, obj *model.Course) (*model.Category, error)
+}
 type MutationResolver interface {
-	CreateCategory(ctx context.Context, input *model.NewCategory) (*model.Cateogry, error)
+	CreateCategory(ctx context.Context, input *model.NewCategory) (*model.Category, error)
 	CreateCourse(ctx context.Context, input model.NewCourse) (*model.Course, error)
 }
 type QueryResolver interface {
-	Categories(ctx context.Context) ([]*model.Cateogry, error)
+	Categories(ctx context.Context) ([]*model.Category, error)
 	Courses(ctx context.Context) ([]*model.Course, error)
 }
 
@@ -94,33 +102,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Cateogry.courses":
-		if e.complexity.Cateogry.Courses == nil {
+	case "Category.courses":
+		if e.complexity.Category.Courses == nil {
 			break
 		}
 
-		return e.complexity.Cateogry.Courses(childComplexity), true
+		return e.complexity.Category.Courses(childComplexity), true
 
-	case "Cateogry.description":
-		if e.complexity.Cateogry.Description == nil {
+	case "Category.description":
+		if e.complexity.Category.Description == nil {
 			break
 		}
 
-		return e.complexity.Cateogry.Description(childComplexity), true
+		return e.complexity.Category.Description(childComplexity), true
 
-	case "Cateogry.id":
-		if e.complexity.Cateogry.ID == nil {
+	case "Category.id":
+		if e.complexity.Category.ID == nil {
 			break
 		}
 
-		return e.complexity.Cateogry.ID(childComplexity), true
+		return e.complexity.Category.ID(childComplexity), true
 
-	case "Cateogry.name":
-		if e.complexity.Cateogry.Name == nil {
+	case "Category.name":
+		if e.complexity.Category.Name == nil {
 			break
 		}
 
-		return e.complexity.Cateogry.Name(childComplexity), true
+		return e.complexity.Category.Name(childComplexity), true
 
 	case "Course.category":
 		if e.complexity.Course.Category == nil {
@@ -360,8 +368,8 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Cateogry_id(ctx context.Context, field graphql.CollectedField, obj *model.Cateogry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Cateogry_id(ctx, field)
+func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -391,9 +399,9 @@ func (ec *executionContext) _Cateogry_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Cateogry_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Category_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Cateogry",
+		Object:     "Category",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -404,8 +412,8 @@ func (ec *executionContext) fieldContext_Cateogry_id(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Cateogry_name(ctx context.Context, field graphql.CollectedField, obj *model.Cateogry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Cateogry_name(ctx, field)
+func (ec *executionContext) _Category_name(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_name(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -435,9 +443,9 @@ func (ec *executionContext) _Cateogry_name(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Cateogry_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Category_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Cateogry",
+		Object:     "Category",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -448,8 +456,8 @@ func (ec *executionContext) fieldContext_Cateogry_name(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Cateogry_description(ctx context.Context, field graphql.CollectedField, obj *model.Cateogry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Cateogry_description(ctx, field)
+func (ec *executionContext) _Category_description(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_description(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -479,9 +487,9 @@ func (ec *executionContext) _Cateogry_description(ctx context.Context, field gra
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Cateogry_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Category_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Cateogry",
+		Object:     "Category",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -492,8 +500,8 @@ func (ec *executionContext) fieldContext_Cateogry_description(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Cateogry_courses(ctx context.Context, field graphql.CollectedField, obj *model.Cateogry) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Cateogry_courses(ctx, field)
+func (ec *executionContext) _Category_courses(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_courses(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -506,7 +514,7 @@ func (ec *executionContext) _Cateogry_courses(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Courses, nil
+		return ec.resolvers.Category().Courses(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -523,12 +531,12 @@ func (ec *executionContext) _Cateogry_courses(ctx context.Context, field graphql
 	return ec.marshalNCourse2ᚕᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCourseᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Cateogry_courses(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Category_courses(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Cateogry",
+		Object:     "Category",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -689,7 +697,7 @@ func (ec *executionContext) _Course_category(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Category, nil
+		return ec.resolvers.Course().Category(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -698,29 +706,29 @@ func (ec *executionContext) _Course_category(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Cateogry)
+	res := resTmp.(*model.Category)
 	fc.Result = res
-	return ec.marshalOCateogry2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogry(ctx, field.Selections, res)
+	return ec.marshalOCategory2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Course_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Course",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Cateogry_id(ctx, field)
+				return ec.fieldContext_Category_id(ctx, field)
 			case "name":
-				return ec.fieldContext_Cateogry_name(ctx, field)
+				return ec.fieldContext_Category_name(ctx, field)
 			case "description":
-				return ec.fieldContext_Cateogry_description(ctx, field)
+				return ec.fieldContext_Category_description(ctx, field)
 			case "courses":
-				return ec.fieldContext_Cateogry_courses(ctx, field)
+				return ec.fieldContext_Category_courses(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Cateogry", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	return fc, nil
@@ -752,9 +760,9 @@ func (ec *executionContext) _Mutation_createCategory(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Cateogry)
+	res := resTmp.(*model.Category)
 	fc.Result = res
-	return ec.marshalNCateogry2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogry(ctx, field.Selections, res)
+	return ec.marshalNCategory2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createCategory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -766,15 +774,15 @@ func (ec *executionContext) fieldContext_Mutation_createCategory(ctx context.Con
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Cateogry_id(ctx, field)
+				return ec.fieldContext_Category_id(ctx, field)
 			case "name":
-				return ec.fieldContext_Cateogry_name(ctx, field)
+				return ec.fieldContext_Category_name(ctx, field)
 			case "description":
-				return ec.fieldContext_Cateogry_description(ctx, field)
+				return ec.fieldContext_Category_description(ctx, field)
 			case "courses":
-				return ec.fieldContext_Cateogry_courses(ctx, field)
+				return ec.fieldContext_Category_courses(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Cateogry", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	defer func() {
@@ -879,9 +887,9 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Cateogry)
+	res := resTmp.([]*model.Category)
 	fc.Result = res
-	return ec.marshalOCateogry2ᚕᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogryᚄ(ctx, field.Selections, res)
+	return ec.marshalOCategory2ᚕᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -893,15 +901,15 @@ func (ec *executionContext) fieldContext_Query_categories(ctx context.Context, f
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_Cateogry_id(ctx, field)
+				return ec.fieldContext_Category_id(ctx, field)
 			case "name":
-				return ec.fieldContext_Cateogry_name(ctx, field)
+				return ec.fieldContext_Category_name(ctx, field)
 			case "description":
-				return ec.fieldContext_Cateogry_description(ctx, field)
+				return ec.fieldContext_Category_description(ctx, field)
 			case "courses":
-				return ec.fieldContext_Cateogry_courses(ctx, field)
+				return ec.fieldContext_Category_courses(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Cateogry", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	return fc, nil
@@ -2956,44 +2964,57 @@ func (ec *executionContext) unmarshalInputNewCourse(ctx context.Context, obj int
 
 // region    **************************** object.gotpl ****************************
 
-var cateogryImplementors = []string{"Cateogry"}
+var categoryImplementors = []string{"Category"}
 
-func (ec *executionContext) _Cateogry(ctx context.Context, sel ast.SelectionSet, obj *model.Cateogry) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, cateogryImplementors)
+func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *model.Category) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, categoryImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Cateogry")
+			out.Values[i] = graphql.MarshalString("Category")
 		case "id":
 
-			out.Values[i] = ec._Cateogry_id(ctx, field, obj)
+			out.Values[i] = ec._Category_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
-			out.Values[i] = ec._Cateogry_name(ctx, field, obj)
+			out.Values[i] = ec._Category_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "description":
 
-			out.Values[i] = ec._Cateogry_description(ctx, field, obj)
+			out.Values[i] = ec._Category_description(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "courses":
+			field := field
 
-			out.Values[i] = ec._Cateogry_courses(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Category_courses(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3020,23 +3041,36 @@ func (ec *executionContext) _Course(ctx context.Context, sel ast.SelectionSet, o
 			out.Values[i] = ec._Course_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
 			out.Values[i] = ec._Course_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "description":
 
 			out.Values[i] = ec._Course_description(ctx, field, obj)
 
 		case "category":
+			field := field
 
-			out.Values[i] = ec._Course_category(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Course_category(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3514,18 +3548,18 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCateogry2githubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogry(ctx context.Context, sel ast.SelectionSet, v model.Cateogry) graphql.Marshaler {
-	return ec._Cateogry(ctx, sel, &v)
+func (ec *executionContext) marshalNCategory2githubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v model.Category) graphql.Marshaler {
+	return ec._Category(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCateogry2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogry(ctx context.Context, sel ast.SelectionSet, v *model.Cateogry) graphql.Marshaler {
+func (ec *executionContext) marshalNCategory2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
-	return ec._Cateogry(ctx, sel, v)
+	return ec._Category(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCourse2githubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCourse(ctx context.Context, sel ast.SelectionSet, v model.Course) graphql.Marshaler {
@@ -3900,7 +3934,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOCateogry2ᚕᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Cateogry) graphql.Marshaler {
+func (ec *executionContext) marshalOCategory2ᚕᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Category) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3927,7 +3961,7 @@ func (ec *executionContext) marshalOCateogry2ᚕᚖgithubᚗcomᚋlucassantoss17
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCateogry2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogry(ctx, sel, v[i])
+			ret[i] = ec.marshalNCategory2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3947,11 +3981,11 @@ func (ec *executionContext) marshalOCateogry2ᚕᚖgithubᚗcomᚋlucassantoss17
 	return ret
 }
 
-func (ec *executionContext) marshalOCateogry2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCateogry(ctx context.Context, sel ast.SelectionSet, v *model.Cateogry) graphql.Marshaler {
+func (ec *executionContext) marshalOCategory2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._Cateogry(ctx, sel, v)
+	return ec._Category(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalONewCategory2ᚖgithubᚗcomᚋlucassantoss1701ᚋgraphqlᚑgolangᚋgraphᚋmodelᚐNewCategory(ctx context.Context, v interface{}) (*model.NewCategory, error) {
